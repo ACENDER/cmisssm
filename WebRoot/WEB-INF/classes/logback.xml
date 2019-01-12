@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration debug="false" scan="true" scanPeriod="1 seconds">
+    <contextName>monox-test</contextName>
+    <property name="log.path" value="E:/logs/uptec/cmis-ssm"/>
+
+    <!-- 控制台输出 -->
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">　
+        <file>${log.path}/root.log</file>
+        <append>false</append>　　　　　
+        <encoder>
+            <pattern>%date [%-5level] %logger[%L:%M]%n %msg%n</pattern>            　　　　　　
+        </encoder>
+    </appender>
+
+    <!-- 项目工程整体 按"天"和"大小"生成日志文件-->
+    <appender name="uptec-cmis" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <!-- 日志存储路径，以及日志名称 -->
+        <file>${log.path}/uptec-cmis.log</file>
+        <!-- 基于时间的生成日志文件策略 -->
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <!-- 按“天”生成日志文件，"%i"代表第几个文件（从0自增），并压缩成.zip包 -->
+            <fileNamePattern>${log.path}/monox-test-%d{yyyy-MM-dd}.%i.log.zip</fileNamePattern>
+            <!-- 保留15天 -->
+            <maxHistory>30</maxHistory>
+            <!-- 在基于时间的基础上，基于文件大小生成日志文件策略 -->
+            <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <!-- 单个文件不能大于30MB -->
+                <maxFileSize>1MB</maxFileSize>
+            </timeBasedFileNamingAndTriggeringPolicy>
+        </rollingPolicy>
+        <!--对日志进行格式化 -->
+        <encoder>
+            <pattern>%date [%-5level] %logger[%L:%M]%n %msg%n</pattern>
+            <charset>UTF-8</charset>
+        </encoder>
+        <append>false</append>
+    </appender>
+    <logger name="com.inspur.cmis" level="DEBUG" additivity="false">
+        <appender-ref ref="uptec-cmis"/>
+    </logger>
+
+    <!-- 按路径-->
+    <appender name="uptec-common" class="ch.qos.logback.core.FileAppender">
+        <file>${log.path}/uptec-common.log</file>
+        <append>false</append>
+        <encoder>
+            <pattern>%date [%-5level] %logger[%L:%M]%n %msg%n</pattern>
+        </encoder>
+    </appender>
+    <logger name="com.inspur.common" level="DEBUG" additivity="false">
+        <appender-ref ref="uptec-common"/>
+    </logger>
+
+    <!-- spring-->
+    <appender name="spring" class="ch.qos.logback.core.FileAppender">
+        <file>${log.path}/spring.log</file>
+        <append>false</append>
+        <encoder>
+            <pattern>%date [%-5level] %logger[%L:%M]%n %msg%n</pattern>
+        </encoder>
+    </appender>
+    <logger name="org.springframework" level="DEBUG" additivity="false">
+        <appender-ref ref="spring"/>
+    </logger>
+
+    <!-- mybatis-->
+    <appender name="mybatis" class="ch.qos.logback.core.FileAppender">
+        <file>${log.path}/mybatis.log</file>
+        <append>false</append>
+        <encoder>
+            <pattern>%date [%-5level] %logger[%L:%M]%n %msg%n</pattern>
+        </encoder>
+    </appender>
+    <logger name="org.apache.ibatis" level="DEBUG" additivity="false">
+        <appender-ref ref="mybatis"/>
+    </logger>
+    <logger name="org.mybatis" level="DEBUG" additivity="false">
+        <appender-ref ref="mybatis"/>
+    </logger>
+
+    <!-- druid-->
+    <appender name="druid" class="ch.qos.logback.core.FileAppender">
+        <file>${log.path}/druid.log</file>
+        <append>false</append>
+        <encoder>
+            <pattern>%date [%-5level] %logger[%L:%M]%n %msg%n</pattern>
+        </encoder>
+    </appender>
+    <logger name="com.alibaba.druid" level="DEBUG" additivity="false">
+        <appender-ref ref="druid"/>
+    </logger>
+
+    <!-- logback-->
+    <appender name="logback" class="ch.qos.logback.core.FileAppender">
+        <file>${log.path}/logback.log</file>
+        <append>false</append>
+        <encoder>
+            <pattern>%date [%-5level] %logger[%L:%M]%n %msg%n</pattern>
+        </encoder>
+    </appender>
+    <logger name="ch.qos.logback" level="DEBUG" additivity="false">
+        <appender-ref ref="logback"/>
+    </logger>
+
+    <!-- log4jdbc-->
+    <appender name="log4jdbc" class="ch.qos.logback.core.FileAppender">
+        <file>${log.path}/log4jdbc.log</file>
+        <append>false</append>
+        <encoder>
+            <pattern>%date [%-5level] %logger[%L:%M]%n %msg%n</pattern>
+        </encoder>
+    </appender>
+    <logger name="jdbc.sqltiming" level="DEBUG" additivity="false">
+        <appender-ref ref="log4jdbc"/>
+    </logger>
+
+    <logger name="jdbc.sqlonly" level="ERROR">
+        <appender-ref ref="log4jdbc"/>
+    </logger>
+    <logger name="jdbc.audit" level="ERROR">
+        <appender-ref ref="log4jdbc"/>
+    </logger>
+    <logger name="jdbc.resultset" level="ERROR">
+        <appender-ref ref="log4jdbc"/>
+    </logger>
+    <logger name="jdbc.connection" level="ERROR">
+        <appender-ref ref="log4jdbc"/>
+    </logger>
+
+    <root level="ERROR">
+        <appender-ref ref="STDOUT"/>
+    </root>
+
+</configuration>

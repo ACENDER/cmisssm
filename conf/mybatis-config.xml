@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-config.dtd">
+
+<configuration>
+	<!-- 实体类的别名 -->
+	
+<typeAliases>
+<typeAlias alias="custBean" type="com.inspur.cmis.base.cust.model.CustBean" />
+</typeAliases>
+
+	<!-- 环境管理，可以配置多个环境，默认是default="development"的环境 -->
+	<environments default="development">
+		<environment id="development">
+			<!-- 事务管理方式,JDBC事务 -->
+			<transactionManager type="JDBC" />
+			<!-- 数据源，type="POOLED"表示使用连接池 -->
+			<dataSource type="POOLED">
+				<property value="oracle.jdbc.OracleDriver" name="driver" />
+				<property value="jdbc:oracle:thin:@localhost:1521/orcl" name="url" />
+				<property name="username" value="scott" />
+				<property name="password" value="tiger" />
+			</dataSource>
+		</environment>
+	</environments>
+	<!--映射文件路径，可能会有多个mapper映射 -->
+	<mappers>
+		<mapper resource="com/inspur/cmis/test/mybatis/CustMapper.xml"/>	
+	</mappers>	
+</configuration>

@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--命名空间应该是对应接口的包名+接口名 -->
+<mapper namespace="com.inspur.cmis.base.work.mapper.MeetDao">
+
+	<select id="getMeetListByPage" resultType="meetBean">
+		select CM_KEY ckey,cm_id cmid,
+		CM_REGULAR_DATE day,
+		CM_REGULAR_PERSONNEL personnel,
+		CM_REGULAR_THEME theme,
+		CM_ATTACHMENT attachment
+		from GZCRM_CMREGULAR
+	</select>
+	<select id="getMeetList" parameterType="HashMap" resultType="meetBean">
+		select CM_KEY ckey,
+		CM_ID cmid,
+		CM_REGULAR_DATE day,
+		CM_REGULAR_PERSONNEL personnel,
+		CM_REGULAR_THEME theme,
+		CM_ATTACHMENT attachment
+		from GZCRM_CMREGULAR
+		<where>
+			<if test="meet.cmid !=null and meet.cmid != '' ">
+				and cm_id = #{meet.cmid}
+			</if>
+			<if test="meet.day !=null and meet.day != '' ">
+				and to_char(cm_regular_date, 'yyyy-MM-dd') = #{meet.day}
+			</if>
+			<if test="meet.theme !=null and meet.theme != '' ">
+				and cm_regular_theme = #{meet.theme}
+			</if>
+		</where>
+	</select>
+	<insert id="addOneMeet" parameterType="HashMap">
+		insert into
+		GZCRM_CMREGULAR
+		(CM_KEY,CM_ID,CM_REGULAR_DATE,CM_REGULAR_PERSONNEL,CM_REGULAR_THEME,CM_ATTACHMENT)
+		values
+		(SEQ_KEY.NEXTVAL,1,#{day},#{personnel},#{theme},#{attachment})
+	</insert>
+
+	<update id="editMeet" parameterType="HashMap">
+		update GZCRM_CMREGULAR
+		set
+		cm_id= #{cmid},
+		CM_REGULAR_DATE = #{day},
+		CM_REGULAR_THEME = #{theme},
+		CM_REGULAR_PERSONNEL = #{personnel},
+		CM_ATTACHMENT = #{attachment}
+		where CM_KEY = #{ckey}
+	</update>
+
+	<select id="getMeetByKey" parameterType="string" resultType="meetBean">
+		select  CM_KEY ckey,cm_id cmid,
+		to_char(CM_REGULAR_DATE, 'yyyy-MM-dd') day,
+		CM_REGULAR_PERSONNEL personnel,
+		CM_REGULAR_THEME theme,
+		CM_ATTACHMENT attachment
+		from GZCRM_CMREGULAR
+		where CM_KEY = #{ckey}
+	</select>
+	<delete id="delMeet">
+		delete from GZCRM_CMREGULAR
+
+		<!--collection 来表示参数中的集合类型 -->
+		<!--item 集合中每个元素的别名 -->
+		<!--index 指的是迭代到的位置 -->
+		<!--open 循环以什么开始 -->
+		<!--close 循环以什么结束 -->
+		<!--separator 分隔符 -->
+		<foreach collection="array" item="key" index="i"
+			open="where cm_key in (" close=")" separator=",">
+			#{key}
+		</foreach>
+	</delete>
+</mapper>
